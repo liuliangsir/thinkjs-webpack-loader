@@ -63,7 +63,7 @@ const userConfigCreator = () => {
             && pkg.config['thinkjs-webpack-loader'].config
         ) {
             // resolve relative to discovered package.json
-            const pkgPath = path.resolve(pkgDir, pkg.config['cz-customizable'].config);
+            const pkgPath = path.resolve(pkgDir, pkg.config['thinkjs-webpack-loader'].config);
             return require(pkgPath);
         }
     }
