@@ -1,28 +1,31 @@
 /**
  * @file Base 模块
  * @author liuliang(liuliang@w3ctech.com)
- * @module base
+ * @module module:base
+ * @exports module:base.loadConfig
  */
 
 import findConfig from 'find-config';
 import helper from 'think-helper';
+import path from 'path';
 
 /**
  * default config module:base~defaultConfig
  * @constant
- * @var {Object} defaultConfig
+ * @member {Object} defaultConfig
  * @default
  * @inner
  */
 const defaultConfig = {
-    'default': {
-        cache: false,
-        bundleDirName: 'webpackBundles/',
-        statsFile: 'webpack-stats.json',
-        pollInterval: 0.1,
-        timeout: false,
-        ignore: ['.hot-update.js', '.map']
-    }
+  'default': {
+    isDebug: false,
+    isCache: false,
+    bundleDirName: 'webpackBundles/',
+    statsFile: 'webpack-stats.json',
+    pollInterval: 0.1,
+    timeout: false,
+    ignore: ['.hot-update.js', '.map']
+  }
 };
 
 /**
@@ -31,7 +34,7 @@ const defaultConfig = {
  * @default
  * @inner
  */
-const defaultConfigName = '.thinkjs-webpack-loader-config.js';
+const defaultConfigName = 'thinkjs-webpack-loader-config.js';
 
 /**
  * creator of user config module:base~userConfigCreator
@@ -41,34 +44,33 @@ const defaultConfigName = '.thinkjs-webpack-loader-config.js';
  * @inner
  */
 const userConfigCreator = () => {
-    const config = findConfig.require(defaultConfigName, {
-        home: false
-    });
+  const config = findConfig.require(defaultConfigName, {
+    home: false
+  });
 
-    if (config) {
-        return config;
+  if (config) {
+    return config;
+  }
+
+  // fallback to locating it using the config block in the nearest package.json
+  let pkg = findConfig('package.json', {
+    home: false
+  });
+
+  if (pkg) {
+    const pkgDir = path.dirname(pkg);
+    pkg = require(pkg);
+
+    if (pkg.config &&
+      pkg.config['thinkjs-webpack-loader'] &&
+      pkg.config['thinkjs-webpack-loader'].config
+    ) {
+      // resolve relative to discovered package.json
+      const pkgPath = path.resolve(pkgDir, pkg.config['thinkjs-webpack-loader'].config);
+      return require(pkgPath);
     }
-
-    // fallback to locating it using the config block in the nearest package.json
-    let pkg = findConfig('package.json', {
-        home: false
-    });
-
-    if (pkg) {
-        const pkgDir = path.dirname(pkg);
-        pkg = require(pkg);
-
-        if (pkg.config &&
-            pkg.config['thinkjs-webpack-loader'] &&
-            pkg.config['thinkjs-webpack-loader'].config
-        ) {
-            // resolve relative to discovered package.json
-            const pkgPath = path.resolve(pkgDir, pkg.config['thinkjs-webpack-loader'].config);
-            return require(pkgPath);
-        }
-    }
-
-}
+  }
+};
 
 /**
  * user config module:base~userConfig
@@ -89,5 +91,5 @@ const userConfig = helper.extend({}, defaultConfig, userConfigCreator() || {});
 const loadConfig = (name) => userConfig[name];
 
 export {
-    loadConfig
+  loadConfig
 };
