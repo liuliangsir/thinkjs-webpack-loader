@@ -4,11 +4,14 @@
  */
 
 import * as base from './base';
+import * as tag from './tag';
 
 export default {
-  base
+  base,
+  tag
 };
 
 export {
-  base
+  base,
+  tag
 };

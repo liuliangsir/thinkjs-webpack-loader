@@ -12,15 +12,18 @@ module.exports = {
     ]
   ],
   'plugins': [
+    [
+      'add-module-exports', {
+        'addDefaultProperty': true
+      }
+    ],
     '@babel/plugin-external-helpers',
     [
       '@babel/plugin-transform-runtime', {
+        'corejs': 2,
         'helpers': true,
-        'polyfill': true,
         'regenerator': true,
-        'moduleName': '@babel/runtime',
-        'useBuiltIns': false,
-        'useESModules': false
+        'useESModules': true
       }
     ],
     [

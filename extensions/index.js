@@ -4,13 +4,13 @@
  */
 
 import {
-  default as renderExtension
+  default as RenderExtension
 } from './renderExtension';
 
 export default {
-  renderExtension
+  RenderExtension
 };
 
 export {
-  renderExtension
+  RenderExtension
 };

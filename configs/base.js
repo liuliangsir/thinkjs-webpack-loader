@@ -7,7 +7,6 @@
 
 import findConfig from 'find-config';
 import helper from 'think-helper';
-import path from 'path';
 
 /**
  * default config module:base~defaultConfig
@@ -17,15 +16,13 @@ import path from 'path';
  * @inner
  */
 const defaultConfig = {
-  'default': {
-    isDebug: false,
-    isCache: false,
-    bundleDirName: 'webpackBundles/',
-    statsFile: 'webpack-stats.json',
-    pollInterval: 0.1,
-    timeout: false,
-    ignore: ['.hot-update.js', '.map']
-  }
+  isDebug: false,
+  isCache: true,
+  bundleDirName: 'dist',
+  statsFile: 'webpack-stats.json',
+  pollInterval: 500,
+  timeoutThreshold: 5000,
+  ignores: ['.hot-update.js', '.map']
 };
 
 /**
@@ -40,16 +37,22 @@ const defaultConfigName = 'thinkjs-webpack-loader-config.js';
  * creator of user config module:base~userConfigCreator
  * @function
  * @name userConfigCreator
+ * @param {string} name - the name of group
+ * @param {string} [env=development] - the symbol of current environment
  * @return {Object} resulting user config
  * @inner
  */
-const userConfigCreator = () => {
+const userConfigCreator = (name, env = 'development') => {
   const config = findConfig.require(defaultConfigName, {
     home: false
   });
 
-  if (config) {
-    return config;
+  if (
+    config &&
+    config[env] &&
+    config[env][name]
+  ) {
+    return config[env][name];
   }
 
   // fallback to locating it using the config block in the nearest package.json
@@ -58,37 +61,29 @@ const userConfigCreator = () => {
   });
 
   if (pkg) {
-    const pkgDir = path.dirname(pkg);
     pkg = require(pkg);
 
-    if (pkg.config &&
+    if (
+      pkg.config &&
       pkg.config['thinkjs-webpack-loader'] &&
       pkg.config['thinkjs-webpack-loader'].config
     ) {
       // resolve relative to discovered package.json
-      const pkgPath = path.resolve(pkgDir, pkg.config['thinkjs-webpack-loader'].config);
-      return require(pkgPath);
+      const pkgPath = require.resolve(pkg.config['thinkjs-webpack-loader'].config);
+      return require(pkgPath)[env][name];
     }
   }
 };
 
 /**
- * user config module:base~userConfig
- * @constant
- * @type {Object}
- * @default
- * @inner
- */
-const userConfig = helper.extend({}, defaultConfig, userConfigCreator() || {});
-
-/**
  * export resulting config module:base~userConfig
  * @function loadConfig
- * @param {string} name - the field name of userConfig
+ * @param {string} name - the name of group
+ * @param {string} env - the symbol of current environment
  * @return {string} resulting config
  * @public
  */
-const loadConfig = (name) => userConfig[name];
+const loadConfig = (name, env) => helper.extend({}, defaultConfig, userConfigCreator(name, env) || {});
 
 export {
   loadConfig
