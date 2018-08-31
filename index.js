@@ -45,15 +45,15 @@ export default class WebpackLoader extends ViewNunjucks {
     } = this;
 
     let path = '';
-    let options = void 0;
+    let option = void 0;
     if (viewFile.indexOf(viewPath)) {
       path = rest;
     } else {
       path = viewPath;
-      options = rest;
+      option = rest;
     }
 
-    const env = nunjucks.configure(path, options);
+    const env = nunjucks.configure(path, option);
     env.addExtension('custom', new RenderExtension(config));
 
     const fn = helper.promisify(env.render, env);

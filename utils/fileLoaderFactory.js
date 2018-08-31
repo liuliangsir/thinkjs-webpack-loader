@@ -61,9 +61,10 @@ class FileLoaderFactory {
    * @memberof FileLoaderFactory#
    * @public
    */
-  * bundleFilter(bundles, extension) {
-    const regexp = new RegExp(`\.${extension}$`, 'g');
+  *bundleFilter(bundles, extension) {
+    if (!bundles) return [];
 
+    const regexp = new RegExp(`\.${extension}$`, 'g');
     for (const bundle of bundles) {
       if (!regexp.test(bundle)) continue;
       yield bundle;
@@ -82,7 +83,7 @@ class FileLoaderFactory {
    * @instance
    * @public
    */
-  async getTags(bundleName, extension = '', config, attr = '') {
+  async getAttrs(bundleName, extension = '', config, attr = '') {
     const tags = [];
     const bundles = this.getBundle(bundleName, extension, config);
     const realBundles = [];

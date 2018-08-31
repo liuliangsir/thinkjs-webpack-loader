@@ -9,6 +9,10 @@ import {
   tag
 } from '../configs';
 
+const {
+  map
+} = tag;
+
 /**
  * RenderExtension 模块
  * @module module:renderExtension
@@ -30,7 +34,7 @@ export default class RenderExtension extends Tag {
    */
   constructor(config) {
     super('custom');
-    // 初始化 config
+    // initial config
     this.config = config;
   }
   /**
@@ -42,20 +46,18 @@ export default class RenderExtension extends Tag {
    * @param {(string|Function)} body - child html content, could be string or function
    * @returns {string}
    */
-  render(context, attrs, body) {
-    return super.render(context, this.attrsFilter(attrs), body);
+  async render(context, attrs, body) {
+    const newAttrs = await this.attrsFilter(attrs);
+    // TODO fix the awful async problem
+    return super.render(context, newAttrs, body);
   }
   tagNameCreator(attrs) {
     let realIndex = -1;
     let tagName = '';
 
-    const {
-      map
-    } = tag;
-
     for (let i = 0, length = attrs.length; i < length; i++) {
       if (map[attrs[i]]) {
-        tagName = map[attrs[i]];
+        tagName = map[attrs[i]]['name'];
         realIndex = i;
         break;
       }
@@ -63,13 +65,13 @@ export default class RenderExtension extends Tag {
 
     // take full advantage of map
     if (realIndex < 0) {
-      tagName = map[''];
+      tagName = map['']['name'];
     }
 
     this.nodeName = tagName;
     return realIndex;
   }
-  attrsFilter(attrs) {
+  async attrsFilter(attrs) {
     const [bundleName, extension, groupName, attr] = attrs;
     const tagNameIndex = this.tagNameCreator(attrs);
 
@@ -82,6 +84,14 @@ export default class RenderExtension extends Tag {
       attrs = attrs.filter((attr, index) => index !== tagNameIndex);
     }
 
-    return attrs;
+    const [newAttr] = await fileLoaderFactory.getAttrs(bundleName, extension, newConfig, attr);
+    if (
+      extension &&
+      map[extension]['attr']
+    ) {
+      attrs.push(`${map[extension]['attr']} = ${newAttr}`);
+    }
+
+    return attrs.filter(attr => ![bundleName, groupName].some(name => name === attr));
   }
 }

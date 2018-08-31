@@ -10,9 +10,18 @@
  * @namespace map
  */
 const map = {
-  '': 'div',
-  'js': 'script',
-  'css': ['link', 'style']
+  '': {
+    name: 'div',
+    attr: ''
+  },
+  'js': {
+    name: 'script',
+    attr: 'src'
+  },
+  'css': {
+    name: 'link',
+    attr: 'href'
+  },
 };
 
 export {

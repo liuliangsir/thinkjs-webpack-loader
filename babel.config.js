@@ -12,11 +12,6 @@ module.exports = {
     ]
   ],
   'plugins': [
-    [
-      'add-module-exports', {
-        'addDefaultProperty': true
-      }
-    ],
     '@babel/plugin-external-helpers',
     [
       '@babel/plugin-transform-runtime', {
