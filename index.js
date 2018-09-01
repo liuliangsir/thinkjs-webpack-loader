@@ -16,11 +16,11 @@ import { RenderExtension } from './extensions';
  */
 export default class WebpackLoader extends ViewNunjucks {
   /**
-   * Create a webpackLoader
+   * create a webpackLoader
+   * @public
    * @param {string} viewFile - view file, an absolute file path
    * @param {Object} viewData - view data for render file
    * @param {Object} config - the config
-   * @public
    */
   constructor(viewFile, viewData, config) {
     super(viewFile, viewData, config);
@@ -28,8 +28,9 @@ export default class WebpackLoader extends ViewNunjucks {
   /**
    *
    * render view file
-   * @memberof WebpackLoader
    * @instance
+   * @memberof WebpackLoader
+   * @returns {Promise}
    * @public
    */
   render() {

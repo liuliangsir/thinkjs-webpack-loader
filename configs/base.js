@@ -11,9 +11,10 @@ import helper from 'think-helper';
 /**
  * default config module:base~defaultConfig
  * @constant
- * @member {Object} defaultConfig
  * @default
  * @inner
+ * @member {Object} defaultConfig
+ * @namespace defaultConfig
  */
 const defaultConfig = {
   isDebug: false,
@@ -36,11 +37,11 @@ const defaultConfigName = 'thinkjs-webpack-loader-config.js';
 /**
  * creator of user config module:base~userConfigCreator
  * @function
+ * @inner
  * @name userConfigCreator
  * @param {string} name - the name of group
  * @param {string} [env=development] - the symbol of current environment
- * @return {Object} resulting user config
- * @inner
+ * @returns {Object} resulting user config
  */
 const userConfigCreator = (name, env = 'development') => {
   const config = findConfig.require(defaultConfigName, {
@@ -76,12 +77,12 @@ const userConfigCreator = (name, env = 'development') => {
 };
 
 /**
- * export resulting config module:base~userConfig
+ * returns resulting config module:base~userConfig
  * @function loadConfig
+ * @public
  * @param {string} name - the name of group
  * @param {string} env - the symbol of current environment
- * @return {string} resulting config
- * @public
+ * @returns {string} resulting config
  */
 const loadConfig = (name, env) => helper.extend({}, defaultConfig, userConfigCreator(name, env) || {});
 

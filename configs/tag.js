@@ -7,6 +7,10 @@
 
 /**
  * the mapping between an abbr of tagName and tagName
+ * @constant
+ * @default
+ * @inner
+ * @member {Object} map
  * @namespace map
  */
 const map = {

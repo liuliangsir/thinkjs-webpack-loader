@@ -12,23 +12,24 @@
 export default class UtilityToolFactory {
   /**
    * wait for a certain time
-   * @static
+   * @memberof UtilityToolFactory
    * @public
    * @param {number} [time=1000] - the time for wait
    * @returns {Promise}
-   * @memberof UtilityToolFactory
+   * @static
    */
   static wait(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   }
 
   /**
-   * creates a throttled function that only invokes func at most once per every wait milliseconds
-   * @static
+   * create a throttled function that only invokes func at most once per every wait milliseconds
+   * @memberof UtilityToolFactory
    * @public
    * @param {Function} func - the function to be invoked
    * @param {number} [threshold=160] - the interval time
-   * @returns {void}
+   * @returns {Function}
+   * @static
    */
   static throttle(func, threshold = 160) {
     let id;

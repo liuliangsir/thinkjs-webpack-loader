@@ -26,7 +26,7 @@ export default class RenderExtension extends Tag {
    */
   config;
   /**
-   * Create a RenderExtension
+   * create a RenderExtension
    * @param config - the config of object literal
    * @memberof RenderExtension
    * @instance
@@ -39,6 +39,7 @@ export default class RenderExtension extends Tag {
   }
   /**
    * render html tag name by nunjucks tag package
+   * @protected
    * @param {Object} context - context of nunjucks
    * @param {Object} context.ctx - locals
    * @param {Object} context.env - nunjucks environment
@@ -51,6 +52,12 @@ export default class RenderExtension extends Tag {
     // TODO fix the awful async problem
     return super.render(context, newAttrs, body);
   }
+  /**
+   * use the mapping to change tag name and return the index at which an abbr of tagName can be found in the attrs
+   * @private
+   * @param {string[]} attrs - the collection containing a couple of attrs
+   * @returns {number}
+   */
   tagNameCreator(attrs) {
     let realIndex = -1;
     let tagName = '';
@@ -71,6 +78,12 @@ export default class RenderExtension extends Tag {
     this.nodeName = tagName;
     return realIndex;
   }
+  /**
+   * returns the filtered attrs
+   * @private
+   * @param {string[]} attrs - the collection containing a couple of attrs
+   * @returns {array}
+   */
   async attrsFilter(attrs) {
     const [bundleName, extension, groupName, attr] = attrs;
     const tagNameIndex = this.tagNameCreator(attrs);
