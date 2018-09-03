@@ -42,7 +42,7 @@ const configCreator = (input, file, env, config) => ({
 
 export default [
   configCreator(
-    'index.js',
+    'src/index.js',
     'dist/index.js',
     'production',
     {
@@ -51,7 +51,7 @@ export default [
     }
   ),
   configCreator(
-    'index.js',
+    'src/index.js',
     'dist/index.es.js',
     'production',
     {
