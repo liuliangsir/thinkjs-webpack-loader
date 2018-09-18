@@ -24,21 +24,29 @@ const externalDeps = Object.keys(Object.assign({}, pkg.dependencies, pkg.peerDep
 const nodeDeps = ['path'];
 const external = externalDeps.concat(nodeDeps);
 
-const configCreator = (input, file, env, config) => ({
-  input,
-  external,
-  plugins: commonPlugins
-    .concat([
-      replace({
-        'process.env.NODE_ENV': JSON.stringify(env)
-      })
-    ])
-    .concat(env === 'production' ? [terser()] : []),
-  output: {
-    file,
-    ...config
+const configCreator = (input, file, env, config) => {
+  const isProduction = env === 'production';
+  const plugins = [
+    ...commonPlugins,
+    replace({ 'process.env.NODE_ENV': JSON.stringify(env) })
+  ];
+
+  if (isProduction) {
+    plugins.push(...[
+      terser()
+    ]);
   }
-});
+
+  return {
+    input,
+    external,
+    plugins,
+    output: {
+      file,
+      ...config
+    }
+  };
+};
 
 export default [
   configCreator(

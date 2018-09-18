@@ -97,7 +97,7 @@ export default class RenderExtension extends Tag {
       attrs = attrs.filter((attr, index) => index !== tagNameIndex);
     }
 
-    const [newAttr] = await fileLoaderFactory.getAttrs(bundleName, extension, newConfig, attr);
+    const [ newAttr ] = await fileLoaderFactory.getAttrs(bundleName, extension, newConfig, attr);
     if (
       extension &&
       map[extension]['attr']

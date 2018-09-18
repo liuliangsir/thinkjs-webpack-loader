@@ -1,0 +1,3 @@
+[submodule "docs/base-directory-tree"]
+  path = docs/base-directory-tree
+  url = git@github.com:liuliangsir/thinkjs-webpack-loader-directory-tree.git
